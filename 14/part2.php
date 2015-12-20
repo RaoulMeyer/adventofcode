@@ -12,6 +12,8 @@ $lines = explode("\n", $input);
 
 $endTime = 2503;
 
+$positions = array();
+
 foreach ($lines as $line) {
     $words = explode(" ", $line);
 
@@ -24,7 +26,10 @@ foreach ($lines as $line) {
 
     $distance = 0;
 
+    $linePositions = array();
+
     for ($i = 0; $i <= $endTime; $i++) {
+        $linePositions[] = $distance;
         if ($i <= $pauseTime + $pause) {
             continue;
         }
@@ -39,5 +44,29 @@ foreach ($lines as $line) {
         $distance += $speed;
     }
 
-    echo $words[0] . ": " . $distance . "\n";
+    $positions[] = $linePositions;
 }
+
+$points = array();
+
+for ($i = 1; $i <= $endTime; $i++) {
+    $winningReindeerPosition = 0;
+
+    foreach ($lines as $index => $temp) {
+        if ($positions[$index][$i] > $winningReindeerPosition) {
+            $winningReindeerPosition = $positions[$index][$i];
+        }
+    }
+
+    foreach ($lines as $index => $temp) {
+        if ($positions[$index][$i] == $winningReindeerPosition) {
+            if (empty($points[$index])) {
+                $points[$index] = 1;
+            } else {
+                $points[$index]++;
+            }
+        }
+    }
+}
+
+var_dump($points);
